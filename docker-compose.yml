@@ -3,33 +3,33 @@ version: '3.7'
 services:
   web:
     build: ./app
-    command: python manage.py runserver 0.0.0.0:8000
+    command: gunicorn binary_tree.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - ./app/:/usr/src/app/
+      - static_volume:/usr/src/app/staticfiles
     ports:
       - 8000:8000
-    environment:
-      - DEBUG=1
-      - SECRET_KEY=foo
-      - SQL_ENGINE=django.db.backends.postgresql
-      - SQL_DATABASE=binaryTree
-      - SQL_USER=admin
-      - SQL_PASSWORD=p4ssw0rd
-      - SQL_HOST=db
-      - SQL_PORT=5432
-      - DATABASE=postgres
+    expose:
+      - 8000
+    env_file: .env
     depends_on:
       - db
   db:
     image: postgres:11.5-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-    environment:
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=p4ssw0rd
-      - POSTGRES_DB=binaryTree
+    env_file: .env.db
     ports:
       - 5432:5432
+  nginx:
+    build: ./nginx
+    volumes:
+      - static_volume:/usr/src/app/staticfiles
+    ports:
+      - 1337:80
+    depends_on:
+      - web
 
 volumes:
-  postgres_data: ./data/
+  postgres_data:
+  static_volume:
