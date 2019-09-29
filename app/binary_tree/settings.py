@@ -26,6 +26,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'etynnc_1yjx!kchoo!y^jjoi3uhj)xfer2f9!
 DEBUG = int(os.environ.get('DEBUG', default=0))
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+CORS_ORIGIN_ALLOW_ALL = True
 
 
 # Application definition
@@ -37,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
+    'rest_framework',
+    'rest_framework_swagger',
     'tree.apps.TreeConfig',
 ]
 
@@ -122,4 +126,5 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/staticfiles/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
